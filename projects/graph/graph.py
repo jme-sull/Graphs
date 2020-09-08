@@ -13,37 +13,64 @@ class Graph:
         """
         Add a vertex to the graph.
         """
-        if vertex_id not in self.vertices:
-            self.vertices[vertex_id] = Stack()
+        self.vertices[vertex_id] = set()
 
     def add_edge(self, v1, v2):
         """
         Add a directed edge to the graph.
         """
-        if v1 in self.vertices:
-            self.vertices[v1].push(v2)
-        else:
-            self.vertices[v1] = {v2}
+        #Find vertex v1 and add v2 to the set of edges 
+        if v1 in self.vertices and v2 in self.vertices:
+            self.vertices[v1].add(v2)
 
     def get_neighbors(self, vertex_id):
         """
         Get all neighbors (edges) of a vertex.
         """
-        return self.vertices[vertex_id]
+        if vertex_id in self.vertices:
+            return self.vertices[vertex_id]
+        else:
+            return None 
 
-    def bft(self, starting_vertex):
+    def bft(self, starting_vertex): #here we are just doiung something at every ndoe
         """
         Print each vertex in breadth-first order
         beginning from starting_vertex.
         """
-        return print(self.vertices)
-
+        #Create an empty queue and enqueue the starting_vertex
+        #while queue is not empty
+            #get the current vertex (dequeue from queye)
+            #print the current vertex
+            #qeue up all the current vertex's neighbours (so we can vist them next)
+        
+        queue = Queue()
+        visted = set()
+        queue.enqueue(starting_vertex)
+        while queue.size() > 0:
+            current_vertex = queue.dequeue()
+            if current_vertex not in visted:
+                print(current_vertex)
+                visted.add(current_vertex)
+                if self.vertices[current_vertex]:
+                    for edge in self.vertices[current_vertex]:
+                        queue.enqueue(edge)
+        
     def dft(self, starting_vertex):
         """
         Print each vertex in depth-first order
         beginning from starting_vertex.
         """
-        return print(self.vertices)
+        stack = Stack()
+        visted = set()
+        stack.push(starting_vertex)
+        while stack.size() > 0:
+            current_vertex = stack.pop()
+            if current_vertex not in visted:
+                print(current_vertex)
+                visted.add(current_vertex)
+                if self.vertices[current_vertex]:
+                    for edge in self.vertices[current_vertex]:
+                        stack.push(edge)
 
     def dft_recursive(self, starting_vertex):
         """
@@ -54,13 +81,35 @@ class Graph:
         """
         pass  # TODO
 
-    def bfs(self, starting_vertex, destination_vertex):
+    def bfs(self, starting_vertex, destination_vertex): 
         """
         Return a list containing the shortest path from
         starting_vertex to destination_vertex in
         breath-first order.
         """
-        pass  # TODO
+        #Create an empty queue and enqueue the starting_vertex
+        #create an empty set to track visited vertices 
+        #while queue is not empty
+            #get the current vertex (dequeue from queue)
+            #check if the current vertex is the destination 
+            #if it is, stop and return 
+            #else add to visited 
+            #qeue up all the current vertex's neighbours (so we can vist them next)
+        queue = Queue()
+        visted = set()
+        queue.enqueue([starting_vertex])
+        while queue.size() > 0:
+            path = queue.dequeue()
+            current_vertex = path[-1]
+            if current_vertex not in visted:
+                if current_vertex == destination_vertex:
+                    return path 
+                else:
+                   visted.add(current_vertex)
+                   if self.vertices[current_vertex]:
+                       for edge in self.vertices[current_vertex]:
+                            new_path = path.append(edge)
+                            queue.enqueue(new_path)         
 
     def dfs(self, starting_vertex, destination_vertex):
         """
