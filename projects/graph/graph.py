@@ -74,12 +74,13 @@ class Graph:
 
     def dft_recursive(self, starting_vertex, visited=None):
         if visited is None:
-            visted = set()
-        visted.add(starting_vertex)
+            visited = set()
+        
+        visited.add(starting_vertex)
         print(starting_vertex)
         for edge in self.vertices[starting_vertex]:
-            if edge not in visted:
-                self.dfs_recursive(edge,visted)
+            if edge not in visited:
+                self.dft_recursive(edge,visited)
 
         """
         Print each vertex in depth-first order
@@ -87,7 +88,7 @@ class Graph:
 
         This should be done using recursion.
         """
-        pass  # TODO
+    
 
     def bfs(self, starting_vertex, destination_vertex): 
         """
@@ -156,7 +157,7 @@ class Graph:
             path = []
         
         visited.add(starting_vertex)
-        new_path = path.append(starting_vertex)
+        new_path = path + [starting_vertex]
         if starting_vertex == destination_vertex:
             return new_path
         for edge in self.vertices[starting_vertex]:
