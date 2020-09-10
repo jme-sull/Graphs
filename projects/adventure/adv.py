@@ -25,8 +25,8 @@ world = World()
 
 
 # You may uncomment the smaller graphs for development and testing purposes.
-map_file = "maps/test_line.txt"
-#map_file = "maps/test_cross.txt"
+#map_file = "maps/test_line.txt"
+map_file = "maps/test_cross.txt"
 # map_file = "maps/test_loop.txt"
 # map_file = "maps/test_loop_fork.txt"
 #map_file = "maps/main_maze.txt"
@@ -51,23 +51,27 @@ backwards_traversal = {
     'e':'w',
     'w':'e'
 }
-visted = {}
+visited = {}
 
-
-""" Start by writing an algorithm that picks a random unexplored 
-direction from the player's current room, travels and 
-logs that direction, then loops. This should cause your player to walk a
- depth-first traversal. When you reach a dead-end (i.e. a room with no unexplored paths),
-  walk back to the nearest room that does contain an unexplored path. """
-while len(visted) < len(room_graph):
-    commands = ["n", "s", "e", "w"]
+while len(visited) < len(room_graph):
     current_room = player.current_room.id
-    if current_room not in visted:
-        visted[player.current_room.id] = player.current_room.get_exits()
-        travel_direction = player.current_room.get_exits()
-        traversal_path = traversal_path + travel_direction
-        player.travel(travel_direction[0])
-        current_room = player.current_room.id
+    visited[current_room] = {}
+    directions = player.current_room.get_exits()
+    for x in directions:
+        visited[current_room][x] = '?'
+    """ if current_room not in visited:
+        print(visited)
+        visited[player.current_room.id] = player.current_room.get_exits()
+        if player.current_room.get_exits():
+            print(player.current_room.get_exits())
+            travel_direction = player.current_room.get_exits()
+            traversal_path = traversal_path + travel_direction
+            player.travel(travel_direction[0])
+            current_room = player.current_room.id
+        else:
+            player.travel(backwards_traversal[travel_direction])
+            current_room = player.current_room.id
+             """
      
 
 # TRAVERSAL TEST
