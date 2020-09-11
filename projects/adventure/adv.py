@@ -26,10 +26,10 @@ world = World()
 
 # You may uncomment the smaller graphs for development and testing purposes.
 #map_file = "maps/test_line.txt"
-map_file = "maps/test_cross.txt"
-# map_file = "maps/test_loop.txt"
-# map_file = "maps/test_loop_fork.txt"
-#map_file = "maps/main_maze.txt"
+#map_file = "maps/test_cross.txt"
+#map_file = "maps/test_loop.txt"
+#map_file = "maps/test_loop_fork.txt"
+map_file = "maps/main_maze.txt"
 
 # Loads the map into a dictionary
 room_graph=literal_eval(open(map_file, "r").read())
@@ -40,8 +40,6 @@ world.print_rooms()
 
 player = Player(world.starting_room)
 
-# Fill this out with directions to walk
-# traversal_path = ['n', 'n']
 traversal_path = []
 backtrack_path = []
 ##establish the direction of the backward traversal
@@ -51,28 +49,28 @@ backwards_traversal = {
     'e':'w',
     'w':'e'
 }
+
 visited = {}
+visited[player.current_room.id] =  player.current_room.get_exits()
 
 while len(visited) < len(room_graph):
     current_room = player.current_room.id
-    visited[current_room] = {}
-    directions = player.current_room.get_exits()
-    for x in directions:
-        visited[current_room][x] = '?'
-    """ if current_room not in visited:
-        print(visited)
-        visited[player.current_room.id] = player.current_room.get_exits()
-        if player.current_room.get_exits():
-            print(player.current_room.get_exits())
-            travel_direction = player.current_room.get_exits()
-            traversal_path = traversal_path + travel_direction
-            player.travel(travel_direction[0])
-            current_room = player.current_room.id
-        else:
-            player.travel(backwards_traversal[travel_direction])
-            current_room = player.current_room.id
-             """
-     
+    if current_room not in visited:
+        visited[current_room] = player.current_room.get_exits()
+        how_did_we_get_here = backtrack_path[-1]
+        visited[current_room].remove(how_did_we_get_here)
+    if len(visited[current_room]) == 0:
+        how_did_we_get_here = backtrack_path[-1]
+        backtrack_path.pop()
+        traversal_path.append(how_did_we_get_here)
+        player.travel(how_did_we_get_here)
+    else:
+        current_direction = visited[current_room][-1]
+        visited[current_room].pop()
+        traversal_path.append(current_direction)
+        backtrack_path.append(backwards_traversal[current_direction])
+        player.travel(current_direction)
+
 
 # TRAVERSAL TEST
 visited_rooms = set() 
